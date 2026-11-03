@@ -1,0 +1,27 @@
+[project]
+name = "aidm-semantic-query"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Minh Nguyen", email = "dangminh214@gmail.com" }
+]
+requires-python = ">=3.15"
+dependencies = [
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+aidm-semantic-query = "aidm_semantic_query:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"

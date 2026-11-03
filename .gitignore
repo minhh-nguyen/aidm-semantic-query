@@ -1,0 +1,21 @@
+.venv/
+.vscode/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# API response cache produced by how_to_use_api_proxy.py
+openai_cache/
+
+.DS_Store
