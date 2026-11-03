@@ -1,6 +1,15 @@
-# aidm-semantic-query
+# AIDM Semantic Queries
 
-My Semantic Queries Implementation.
+This repository is the 2nd part of the AIDM course at TU Darmstadt. It contains ...
+
+The implementation is benchmarked against SemBench
+
+## Requirements
+
+SemBench
+```bash
+git submodule update --init --recursive
+```
 
 ## Setup
 
