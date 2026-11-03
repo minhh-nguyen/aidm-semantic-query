@@ -1,0 +1,3 @@
+[submodule "SemBench"]
+	path = SemBench
+	url = git@github.com:minhh-nguyen/SemBench.git
