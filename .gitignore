@@ -17,5 +17,6 @@ htmlcov/
 
 # API response cache produced by how_to_use_api_proxy.py
 openai_cache/
+.agents/
 
 .DS_Store

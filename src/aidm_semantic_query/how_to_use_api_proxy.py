@@ -1,5 +1,6 @@
-""" This file was taken originally from AIDM course moodle
-This file shouln't be modified
+"""This file was taken originally from AIDM course moodle
+This file shouln't be modified and just the example from TA in the course.
+It is used to show how to use the API proxy for OpenAI API calls.
 """
 
 import hashlib
@@ -22,25 +23,25 @@ CHAT_COMPLETIONS_MODELS = {
         "usd_per_1m_input_tokens": 2.0,
         "usd_per_1m_output_tokens": 10.0,
         "usd_per_1m_cached_input_tokens": 0.1,
-        "usd_per_1m_cache_write_input_tokens": 2.5
+        "usd_per_1m_cache_write_input_tokens": 2.5,
     },
     "gpt-6.1-terra": {
         "usd_per_1m_input_tokens": 1.0,
         "usd_per_1m_output_tokens": 5.0,
         "usd_per_1m_cached_input_tokens": 0.05,
-        "usd_per_1m_cache_write_input_tokens": 1.25
+        "usd_per_1m_cache_write_input_tokens": 1.25,
     },
     "gpt-6-luna": {
         "usd_per_1m_input_tokens": 0.1,
         "usd_per_1m_output_tokens": 0.5,
         "usd_per_1m_cached_input_tokens": 0.01,
-        "usd_per_1m_cache_write_input_tokens": 0.125
-    }
+        "usd_per_1m_cache_write_input_tokens": 0.125,
+    },
 }
 
 EMBEDDING_MODELS = {
     "text-embedding-3-small": {"usd_per_1m_input_tokens": 0.02},
-    "text-embedding-3-large": {"usd_per_1m_input_tokens": 0.13}
+    "text-embedding-3-large": {"usd_per_1m_input_tokens": 0.13},
 }
 
 
@@ -59,9 +60,11 @@ def cost_for_chat_completion(response: dict) -> float:
     output_tokens = usage["completion_tokens"]
 
     input_cost = (
-            input_tokens * model_info["usd_per_1m_input_tokens"] / 1_000_000
-            + cached_input_tokens * model_info["usd_per_1m_cached_input_tokens"] / 1_000_000
-            + cache_write_input_tokens * model_info["usd_per_1m_cache_write_input_tokens"] / 1_000_000
+        input_tokens * model_info["usd_per_1m_input_tokens"] / 1_000_000
+        + cached_input_tokens * model_info["usd_per_1m_cached_input_tokens"] / 1_000_000
+        + cache_write_input_tokens
+        * model_info["usd_per_1m_cache_write_input_tokens"]
+        / 1_000_000
     )
 
     output_cost = output_tokens * model_info["usd_per_1m_output_tokens"] / 1_000_000
@@ -85,32 +88,41 @@ def log_monthly_budget() -> None:
     """Log the remaining monthly budget percentage."""
 
     if "AIDM_USER" not in os.environ.keys():
-        logger.error("Set AIDM_USER environment variable with your secret user name from Moodle!")
+        logger.error(
+            "Set AIDM_USER environment variable with your secret user name from Moodle!"
+        )
         exit()
 
     http_response = requests.post(
         url=URL + "/budget",
         json={"user": os.environ["AIDM_USER"]},
-        headers={"Content-Type": "application/json"}
+        headers={"Content-Type": "application/json"},
     )
 
     if http_response.status_code != 200:
         logger.error(f"request failed: {http_response} {http_response.content}")
         http_response.raise_for_status()
 
-    logger.info(f"remaining monthly cost budget: {int(http_response.json()['budget'] * 100)}%")
+    logger.info(
+        f"remaining monthly cost budget: {int(http_response.json()['budget'] * 100)}%"
+    )
 
 
 def execute_and_cache_request(request: dict, url: str) -> dict:
     """Execute and cache one API request."""
     if "AIDM_USER" not in os.environ.keys():
-        logger.error("Set AIDM_USER environment variable with your secret user name from Moodle!")
+        logger.error(
+            "Set AIDM_USER environment variable with your secret user name from Moodle!"
+        )
         exit()
 
     request["user"] = os.environ["AIDM_USER"]
 
     CACHE_PATH.mkdir(parents=True, exist_ok=True)
-    cache_path = CACHE_PATH / f"{hashlib.sha256(bytes(json.dumps(request), 'utf-8')).hexdigest()}.json"
+    cache_path = (
+        CACHE_PATH
+        / f"{hashlib.sha256(bytes(json.dumps(request), 'utf-8')).hexdigest()}.json"
+    )
 
     if cache_path.is_file():
         with open(cache_path, "r", encoding="utf-8") as file:
@@ -118,7 +130,9 @@ def execute_and_cache_request(request: dict, url: str) -> dict:
         if request == cached_pair["request"]:
             return cached_pair["response"]
 
-    http_response = requests.post(url=url, json=request, headers={"Content-Type": "application/json"})
+    http_response = requests.post(
+        url=url, json=request, headers={"Content-Type": "application/json"}
+    )
 
     if http_response.status_code != 200:
         logger.error(f"request failed: {http_response} {http_response.content}")
@@ -143,8 +157,10 @@ def execute_embeddings_request(request: dict) -> dict:
     return execute_and_cache_request(request, URL + "/embeddings")
 
 
-if __name__ == '__main__':
-    logging.basicConfig(format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.INFO)
+if __name__ == "__main__":
+    logging.basicConfig(
+        format="[%(asctime)s][%(levelname)s] %(message)s", level=logging.INFO
+    )
 
     # Log monthly budget percentage
     log_monthly_budget()
@@ -157,16 +173,18 @@ if __name__ == '__main__':
             "messages": [
                 {
                     "role": "user",
-                    "content": f"Return a comma-separated list of the first {ix + 1} prime numbers."
+                    "content": f"Return a comma-separated list of the first {ix + 1} prime numbers.",
                 }
-            ]
+            ],
         }
         cc_requests.append(req)
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         for response in executor.map(execute_chat_completions_request, cc_requests):
             cost = cost_for_chat_completion(response)
-            logger.info(f"Response: {response['choices'][0]['message']['content']} Cost: {cost}")
+            logger.info(
+                f"Response: {response['choices'][0]['message']['content']} Cost: {cost}"
+            )
 
     # Execute some embedding requests
     emb_requests = []
@@ -175,8 +193,8 @@ if __name__ == '__main__':
             "model": "text-embedding-3-small",
             "input": [
                 f"This is sentence number {ix * 2}.",
-                f"This is sentence number {ix * 2 + 1}."
-            ]
+                f"This is sentence number {ix * 2 + 1}.",
+            ],
         }
         emb_requests.append(req)
 
