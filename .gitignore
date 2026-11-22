@@ -20,3 +20,4 @@ openai_cache/
 .agents/
 
 .DS_Store
+papers/
