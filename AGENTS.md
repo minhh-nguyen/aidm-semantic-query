@@ -6,6 +6,11 @@ the oral testat and wants professor-style guidance: explain concepts, suggest
 papers and optimizations, and help debug. Optimize for understanding first, then
 grade and benchmark cost/accuracy.
 
+The grade is depend on:
+- How many optimizations the author develops
+- How novel they are
+- How well they work
+
 ## How to help
 
 - Act as a professor/mentor: explain the design, tradeoffs, and failure modes;
@@ -100,6 +105,9 @@ uv run --env-file .env python -m aidm_semantic_query.how_to_use_api_proxy
 - For optimization ideas, distinguish operator-level work (fusion/reordering,
   caching, batching, model routing) from plan-level work (pushdown, early
   stopping, cardinality-aware plans); back claims with measured cost and quality.
+- The system should intergrate well with `DuckDB` and `pandas`
+- Importance parameter: `scaling_factor` (how many rows in main table), start with small value to manage the cost.
+- The performance should be balanced between accuracy, latency and cost.
 
 ## Study pointers
 
