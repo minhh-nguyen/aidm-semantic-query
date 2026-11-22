@@ -10,27 +10,6 @@ The repository is currently a **skeleton**: the package, the API plumbing, and
 the module layout exist, but the operators, planner, and SQL front end are still
 stubs. See [Current status](#current-status).
 
-## What the engine must support
-
-From `part-2-instructions.pdf`:
-
-- **Semantic operators:** semantic filter, semantic map, semantic join.
-- **Relational operators:** projection, relational filter, relational join,
-  `GROUP BY`, `ORDER BY`, `COUNT`, `LIMIT`.
-- **Composable plans:** operators must combine into different query plans; do not
-  hard-code individual benchmark queries.
-- **Modalities:** table, text, and image. Every semantic operator must support
-  every modality, including cross-modal joins.
-- **Relational execution:** integrate well with pandas or DuckDB for the
-  relational parts.
-- **Query interface:** you are free to design it. A **Python API is highly
-  recommended**; a custom query language is explicitly not recommended, because
-  held-out queries must be executable with little manual effort during the
-  testat.
-
-The four testat scenarios are **Movie**, **Animals/Wildlife**, **MMQA**, and
-**E-Commerce**. SemBench also ships **Cars** and **Medical** scenarios, but the
-held-out queries cover only the first four.
 
 ## Current status
 
@@ -47,39 +26,6 @@ held-out queries cover only the first four.
 `pandas` and `duckdb` are **not** dependencies yet; add them to
 `pyproject.toml` when the relational layer is implemented.
 
-## Grading and testat
-
-The project is worth **50%** of the course grade, split into two equally
-weighted parts:
-
-- **Part 2.1 — Query execution (25%).**
-  - Execute the previously provided query list (see Moodle).
-  - Execute held-out queries during the testat. They arrive in **BigQuery
-    syntax** and use the operators above.
-  - Compute and show SemBench quality metrics per query and per scenario
-    (plot or table). Results are checked manually during the testat.
-- **Part 2.2 — Accuracy/cost optimization (25%).**
-  - Integrate existing optimizations (from the student paper presentations) and
-    add your own novel ones.
-  - Explain each optimization and demonstrate its effect.
-  - **Accuracy** means SemBench quality metrics; **cost** means LLM and
-    embedding spend. Show **cost-accuracy Pareto plots for multiple queries**.
-  - The grade depends on how many optimizations you develop, how novel they are,
-    and how well they work — plus how well you can explain them.
-
-The **testat** is a 15-minute individual oral exam at the end of the semester
-(March 2027). Prepare slides, be ready to point at the relevant code, and expect
-to run held-out queries live.
-
-Submission: upload the repository as a **ZIP to Moodle before the testat**. You
-will set it up from the ZIP in a **clean (Docker) environment** during the
-testat, so it must install and run from scratch. **Do not include SemBench data
-in the ZIP**; the course provides the data during the testat.
-
-Rules: the implementation is **individual work**; do not share solutions. AI
-assistance is allowed, but you are graded on your understanding. Attendance is
-mandatory for the kickoff, at least 4 of 5 presentation sessions, at least one
-office hour, and your testat slot.
 
 ## Requirements and setup
 

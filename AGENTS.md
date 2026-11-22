@@ -25,6 +25,22 @@ The grade is depend on:
   user's own and explainable. The testat is oral and individual: do not hand over
   a black-box solution the user cannot defend.
 
+## Layout
+
+```text
+src/aidm_semantic_query/
+  __init__.py              # main(); [project.scripts] entrypoint
+  main.py                  # python -m aidm_semantic_query.main shim
+  config.py                # AIDM_USER + cache path
+  how_to_use_api_proxy.py  # course reference; do not modify
+  utils/text.py            # placeholder
+tests/                     # pytest target; currently no real tests
+scripts/, examples/        # runnable-only; not shipped
+```
+
+Importable logic belongs in `src/aidm_semantic_query/`; `scripts/` and
+`examples/` are thin wrappers.
+
 ## Current state (verified)
 
 - The repo is still a skeleton. `src/aidm_semantic_query/__init__.py:main()` only
@@ -118,18 +134,25 @@ uv run --env-file .env python -m aidm_semantic_query.how_to_use_api_proxy
   error), money, latency, and memory. The course cares about the cost-accuracy
   frontier, not just raw accuracy.
 
-## Layout
 
-```text
-src/aidm_semantic_query/
-  __init__.py              # main(); [project.scripts] entrypoint
-  main.py                  # python -m aidm_semantic_query.main shim
-  config.py                # AIDM_USER + cache path
-  how_to_use_api_proxy.py  # course reference; do not modify
-  utils/text.py            # placeholder
-tests/                     # pytest target; currently no real tests
-scripts/, examples/        # runnable-only; not shipped
-```
+## What the engine must support
 
-Importable logic belongs in `src/aidm_semantic_query/`; `scripts/` and
-`examples/` are thin wrappers.
+From `part-2-instructions.pdf`:
+
+- **Semantic operators:** semantic filter, semantic map, semantic join.
+- **Relational operators:** projection, relational filter, relational join,
+  `GROUP BY`, `ORDER BY`, `COUNT`, `LIMIT`.
+- **Composable plans:** operators must combine into different query plans; do not
+  hard-code individual benchmark queries.
+- **Modalities:** table, text, and image. Every semantic operator must support
+  every modality, including cross-modal joins.
+- **Relational execution:** integrate well with pandas or DuckDB for the
+  relational parts.
+- **Query interface:** you are free to design it. A **Python API is highly
+  recommended**; a custom query language is explicitly not recommended, because
+  held-out queries must be executable with little manual effort during the
+  testat.
+
+The four testat scenarios are **Movie**, **Animals/Wildlife**, **MMQA**, and
+**E-Commerce**. SemBench also ships **Cars** and **Medical** scenarios, but the
+held-out queries cover only the first four.
