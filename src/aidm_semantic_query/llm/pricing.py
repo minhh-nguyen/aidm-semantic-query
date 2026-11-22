@@ -2,4 +2,4 @@
 This file is used to calculate and limit the price cost
 """
 
-# def calculate_cost_from_response():
+from aidm_semantic_query.utils.how_to_use_api_proxy import cost_for_chat_completion

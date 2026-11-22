@@ -21,6 +21,16 @@ cp .env.example .env       # then set AIDM_USER (secret from Moodle)
 `AIDM_USER` is required by the API proxy; `.env` is loaded explicitly with
 `--env-file .env` so nothing leaks into the repository.
 
+
+## Models
+
+Available Models: 
+- gpt-6-luna (cheapest)
+- gpt-6.1-terra
+- gpt-6.1-sol
+
+By default: Use `gpt-6.1-sol`
+
 ## Usage
 
 ```bash
